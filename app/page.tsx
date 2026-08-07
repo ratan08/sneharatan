@@ -1,69 +1,267 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Heart } from "lucide-react";
+import confetti from "canvas-confetti";
+
+const questions = [
+  { id: 1, text: "Din me 10 min he sahi lekin call pr baat hoge humare?" },
+  { id: 2, text: "Aur tumhe mujhe holiday chahiye?" },
+  { id: 3, text: "Kal se sirf text karogi ya call bhi?" },
+  { id: 4, text: "Will you promise to share the responsibilities of our home and future together?" },
+  { id: 5, text: "Will you stand by me through all of life's challenges and celebrate our successes together?" },
+  { id: 6, text: "Will you promise to support me in our mutual growth and financial duties?" },
+  { id: 7, text: "Will you promise to share in both my joys and my sorrows unconditionally?" },
+  { id: 8, text: "Will you support me in caring for our family and raising our future with love?" },
+  { id: 9, text: "Will you be my partner in health and sickness, sharing a life of joy and peace?" },
+  { id: 10, text: "Will you be my best friend and soulmate for this life and beyond?" },
+];
+
+const pleadingMessages = [
+  "No",
+  "Please say yes! 🥺",
+  "Maan jao na! 💕",
+  "I beg you! 🙏",
+  "Pretty please! 🌸",
+  "Don't do this to me! 😭",
+  "Sneha, please! 💖",
+  "You're breaking my heart! 💔",
+  "Just click yes! 😍",
+  "Okay, last chance... please! 💘"
+];
+
+export default function ProposalPage() {
+  const [started, setStarted] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [noCount, setNoCount] = useState(0);
+  const [proposalAccepted, setProposalAccepted] = useState(false);
+  const [isHoveringNo, setIsHoveringNo] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const handleStart = () => setStarted(true);
+
+  const handleYes = () => {
+    if (currentQuestion < questions.length) {
+      setCurrentQuestion(currentQuestion + 1);
+      setNoCount(0);
+    } else {
+      triggerConfetti();
+      setProposalAccepted(true);
+    }
+  };
+
+  const handleNo = () => {
+    if (noCount < pleadingMessages.length - 1) {
+      setNoCount(noCount + 1);
+    } else {
+      // After 10 nos, force to next question
+      if (currentQuestion < questions.length) {
+        setCurrentQuestion(currentQuestion + 1);
+        setNoCount(0);
+      }
+    }
+  };
+
+  const triggerConfetti = () => {
+    const duration = 15 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+    const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+
+    const interval: any = setInterval(function () {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+      confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+      confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+    }, 250);
+  };
+
+  const currentNoMessage = pleadingMessages[Math.min(noCount, pleadingMessages.length - 1)];
+
+  if (!mounted) return null;
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      {/* Floating Hearts Background */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute text-pink-500/30"
+            initial={{ 
+              y: "110vh", 
+              x: `${Math.random() * 100}vw`,
+              scale: Math.random() * 0.5 + 0.5,
+              rotate: 0
+            }}
+            animate={{ 
+              y: "-10vh",
+              x: `${Math.random() * 100}vw`,
+              rotate: 360
+            }}
+            transition={{ 
+              duration: Math.random() * 10 + 10,
+              repeat: Infinity,
+              ease: "linear",
+              delay: Math.random() * 10
+            }}
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <Heart size={40} fill="currentColor" />
+          </motion.div>
+        ))}
+      </div>
+
+      <AnimatePresence mode="wait">
+        {!started && (
+          <motion.div 
+            key="start"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="glass-card p-10 rounded-3xl max-w-lg w-full text-center relative z-10 shadow-2xl"
           >
-            Documentation
-          </a>
-        </div>
-      </main>
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 drop-shadow-md">
+              For My Love, Sneha ❤️
+            </h1>
+            <p className="text-xl text-white/90 mb-8 italic">
+              "तुम्हारी मुस्कान से ही शुरू होती है मेरी हर सुबह..."
+            </p>
+            <button 
+              onClick={handleStart}
+              className="floating bg-white text-pink-600 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-pink-50 hover:shadow-xl transition-all duration-300 text-lg cursor-pointer"
+            >
+              Begin Our Journey
+            </button>
+          </motion.div>
+        )}
+
+        {started && !proposalAccepted && currentQuestion < questions.length && (
+          <motion.div 
+            key="question"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ type: "spring", bounce: 0.4 }}
+            className="glass-card p-8 md:p-12 rounded-3xl max-w-2xl w-full text-center relative z-10 shadow-2xl"
+          >
+            <div className="text-sm font-semibold text-white/80 mb-4 uppercase tracking-widest">
+              Promise {currentQuestion + 1} of {questions.length}
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-10 leading-tight">
+              {questions[currentQuestion].text}
+            </h2>
+            
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <button 
+                onClick={handleYes}
+                className="bg-white text-pink-600 font-bold py-4 px-10 rounded-full shadow-lg hover:shadow-pink-500/50 hover:scale-105 active:scale-95 transition-all duration-300 text-xl w-full sm:w-auto border-2 border-transparent hover:border-pink-200 cursor-pointer"
+              >
+                Haan (Yes) ❤️
+              </button>
+              <motion.button 
+                onClick={handleNo}
+                onMouseEnter={() => setIsHoveringNo(true)}
+                onMouseLeave={() => setIsHoveringNo(false)}
+                animate={isHoveringNo && currentQuestion >= 3 ? {
+                  x: Math.random() * 40 - 20,
+                  y: Math.random() * 40 - 20,
+                } : { x: 0, y: 0 }}
+                className="bg-pink-600/30 text-white font-bold py-4 px-8 rounded-full shadow-lg backdrop-blur-sm border border-white/30 hover:bg-pink-600/50 transition-colors duration-300 text-lg w-full sm:w-auto cursor-pointer"
+              >
+                {currentNoMessage}
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+
+        {started && !proposalAccepted && currentQuestion === questions.length && (
+          <motion.div 
+            key="proposal"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="glass-card p-10 rounded-3xl max-w-2xl w-full text-center relative z-10 shadow-2xl border-4 border-white/50"
+          >
+            <div className="flex justify-center mb-6">
+              <Heart className="text-red-500 floating" size={80} fill="currentColor" />
+            </div>
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-8 drop-shadow-lg">
+              I love you, Sneha.
+            </h1>
+            <h2 className="text-4xl text-white font-medium mb-12">
+              Will you marry me? 💍
+            </h2>
+            
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <button 
+                onClick={handleYes}
+                className="bg-white text-red-500 font-bold py-5 px-12 rounded-full shadow-[0_0_40px_rgba(255,255,255,0.6)] hover:scale-110 active:scale-95 transition-all duration-300 text-2xl w-full sm:w-auto cursor-pointer"
+              >
+                YES! A thousand times YES!
+              </button>
+              
+              <motion.button 
+                onClick={handleNo}
+                onMouseEnter={() => setIsHoveringNo(true)}
+                onMouseLeave={() => setIsHoveringNo(false)}
+                animate={isHoveringNo ? {
+                  x: Math.random() * 100 - 50,
+                  y: Math.random() * 100 - 50,
+                } : { x: 0, y: 0 }}
+                className="bg-transparent text-white/70 font-semibold py-3 px-6 rounded-full hover:bg-white/10 transition-colors text-lg cursor-pointer"
+              >
+                {noCount > 0 ? "You can't say no now 😉" : "No"}
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+
+        {proposalAccepted && (
+          <motion.div 
+            key="success"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="glass-card p-10 md:p-14 rounded-3xl max-w-3xl w-full text-center relative z-10 shadow-2xl"
+          >
+            <div className="mb-8">
+              <p className="text-2xl text-yellow-300 font-medium mb-2 drop-shadow-md">
+                मंगलम् भगवान विष्णुः मंगलम् गरुड़ध्वजः।
+              </p>
+              <p className="text-2xl text-yellow-300 font-medium drop-shadow-md">
+                मंगलम् पुण्डरीकाक्षः मंगलाय तनो हरिः॥
+              </p>
+            </div>
+            
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
+              She said YES! 🎉
+            </h1>
+            
+            <div className="bg-white/20 rounded-2xl p-6 mb-8 backdrop-blur-md border border-white/30 inline-block">
+              <p className="text-3xl text-white font-semibold">
+                We will get married on
+              </p>
+              <p className="text-4xl md:text-6xl font-bold text-yellow-200 mt-4 drop-shadow-md">
+                14 March 2027
+              </p>
+            </div>
+            
+            <p className="text-2xl text-white/90 italic font-medium">
+              "Forever and Always, Ratan & Sneha" ❤️
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
