@@ -1,47 +1,432 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-playfair: "Playfair Display", serif;
+  --font-great-vibes: "Great Vibes", cursive;
+  --color-rose-glow: rgba(255, 75, 110, 0.4);
+  --color-gold: #f5c842;
+  --color-gold-soft: #ffeaa7;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: #030014;
+  --color-foreground: #f8fafc;
+  --font-sans: var(--font-playfair);
+  --font-cursive: var(--font-great-vibes);
 }
 
-@layer utilities {
-  .bg-romantic-gradient {
-    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
-  }
-  .bg-romantic-dark {
-    background: linear-gradient(135deg, #431024 0%, #761234 100%);
-  }
-  
-  .glass-card {
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  }
-}
-
+/* ═══════════════════════════════════════════
+   BODY & BASE
+   ═══════════════════════════════════════════ */
 body {
-  font-family: 'Outfit', 'Inter', sans-serif;
+  font-family: var(--font-playfair), serif;
   overflow-x: hidden;
-  background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
-  color: #171717;
+  background: #030014;
+  color: #f8fafc;
+  min-height: 100vh;
 }
 
+/* ═══════════════════════════════════════════
+   STARRY SKY BACKGROUND
+   ═══════════════════════════════════════════ */
+.starry-bg {
+  background: radial-gradient(ellipse at 20% 50%, rgba(88, 28, 52, 0.5) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(60, 20, 80, 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(30, 10, 60, 0.6) 0%, transparent 60%),
+    #030014;
+}
+
+/* ═══════════════════════════════════════════
+   TWINKLING STARS (Pure CSS)
+   ═══════════════════════════════════════════ */
+.stars-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.stars-layer::before,
+.stars-layer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+      2px 2px at 20px 30px,
+      rgba(255, 255, 255, 0.8),
+      transparent
+    ),
+    radial-gradient(
+      2px 2px at 40px 70px,
+      rgba(255, 255, 255, 0.6),
+      transparent
+    ),
+    radial-gradient(
+      1px 1px at 90px 40px,
+      rgba(255, 255, 255, 0.9),
+      transparent
+    ),
+    radial-gradient(
+      1px 1px at 130px 80px,
+      rgba(255, 255, 255, 0.5),
+      transparent
+    ),
+    radial-gradient(
+      2px 2px at 160px 30px,
+      rgba(255, 200, 200, 0.7),
+      transparent
+    ),
+    radial-gradient(
+      1px 1px at 200px 60px,
+      rgba(255, 255, 255, 0.8),
+      transparent
+    ),
+    radial-gradient(
+      1px 1px at 250px 10px,
+      rgba(255, 220, 255, 0.6),
+      transparent
+    ),
+    radial-gradient(
+      2px 2px at 290px 90px,
+      rgba(255, 255, 255, 0.9),
+      transparent
+    );
+  background-size: 300px 100px;
+  animation: twinkle 4s ease-in-out infinite alternate;
+}
+
+.stars-layer::after {
+  background-position: 150px 50px;
+  animation-delay: 2s;
+  opacity: 0.6;
+}
+
+@keyframes twinkle {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   GLASS CARD (Premium Glassmorphism)
+   ═══════════════════════════════════════════ */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.glass-card-bright {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5),
+    0 0 80px rgba(255, 75, 110, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* ═══════════════════════════════════════════
+   ENVELOPE ANIMATION
+   ═══════════════════════════════════════════ */
+.envelope {
+  width: 280px;
+  height: 200px;
+  position: relative;
+  perspective: 800px;
+  cursor: pointer;
+}
+
+.envelope-body {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #d4585d 0%, #c0392b 100%);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(192, 57, 43, 0.4);
+}
+
+.envelope-body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(
+    135deg,
+    transparent 33%,
+    rgba(255, 255, 255, 0.1) 33%,
+    rgba(255, 255, 255, 0.1) 66%,
+    transparent 66%
+  );
+}
+
+.envelope-flap {
+  width: 100%;
+  height: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top center;
+  z-index: 2;
+}
+
+.envelope-flap::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  clip-path: polygon(0 0, 50% 100%, 100% 0);
+  border-radius: 12px 12px 0 0;
+}
+
+.envelope-heart {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+}
+
+/* ═══════════════════════════════════════════
+   GOLDEN GLOW BUTTON
+   ═══════════════════════════════════════════ */
+.btn-glow {
+  background: linear-gradient(135deg, #f5c842 0%, #e8a820 50%, #f5c842 100%);
+  color: #1a0a2e;
+  font-weight: 700;
+  padding: 16px 40px;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  box-shadow: 0 0 30px rgba(245, 200, 66, 0.3),
+    0 4px 15px rgba(245, 200, 66, 0.2);
+  transition: all 0.3s ease;
+}
+
+.btn-glow:hover {
+  box-shadow: 0 0 50px rgba(245, 200, 66, 0.5),
+    0 6px 20px rgba(245, 200, 66, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-glow::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(45deg);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   ROSE BUTTON (Yes)
+   ═══════════════════════════════════════════ */
+.btn-rose {
+  background: linear-gradient(135deg, #ff4b6e 0%, #ff6b8a 50%, #ff4b6e 100%);
+  color: #fff;
+  font-weight: 700;
+  padding: 16px 40px;
+  border-radius: 50px;
+  font-size: 1.15rem;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 30px rgba(255, 75, 110, 0.35),
+    0 4px 15px rgba(255, 75, 110, 0.25);
+  transition: all 0.3s ease;
+}
+
+.btn-rose:hover {
+  box-shadow: 0 0 60px rgba(255, 75, 110, 0.5),
+    0 6px 20px rgba(255, 75, 110, 0.35);
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* ═══════════════════════════════════════════
+   PHOTO FRAME
+   ═══════════════════════════════════════════ */
+.photo-frame {
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5),
+    0 0 60px rgba(255, 75, 110, 0.1);
+  position: relative;
+}
+
+.photo-frame::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 22px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 75, 110, 0.3),
+    transparent,
+    rgba(245, 200, 66, 0.3)
+  );
+  z-index: -1;
+}
+
+/* ═══════════════════════════════════════════
+   PROGRESS BAR
+   ═══════════════════════════════════════════ */
+.progress-bar {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff4b6e, #f5c842);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+  box-shadow: 0 0 10px rgba(255, 75, 110, 0.5);
+}
+
+/* ═══════════════════════════════════════════
+   FLOATING ANIMATION
+   ═══════════════════════════════════════════ */
 .floating {
   animation: floating 3s ease-in-out infinite;
 }
 
 @keyframes floating {
-  0% { transform: translate(0,  0px); }
-  50%  { transform: translate(0, 15px); }
-  100%   { transform: translate(0, -0px); }
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   PULSE GLOW
+   ═══════════════════════════════════════════ */
+.pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(255, 75, 110, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 75, 110, 0.6),
+      0 0 80px rgba(255, 75, 110, 0.2);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   HEARTBEAT
+   ═══════════════════════════════════════════ */
+.heartbeat {
+  animation: heartbeat 1.2s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.15);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.1);
+  }
+  70% {
+    transform: scale(1);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   TEXT GLOW
+   ═══════════════════════════════════════════ */
+.text-glow {
+  text-shadow: 0 0 10px rgba(255, 75, 110, 0.5),
+    0 0 30px rgba(255, 75, 110, 0.3), 0 0 60px rgba(255, 75, 110, 0.1);
+}
+
+.text-glow-gold {
+  text-shadow: 0 0 10px rgba(245, 200, 66, 0.5),
+    0 0 30px rgba(245, 200, 66, 0.3), 0 0 60px rgba(245, 200, 66, 0.1);
+}
+
+/* ═══════════════════════════════════════════
+   ROSE PETALS
+   ═══════════════════════════════════════════ */
+.petal {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: radial-gradient(
+    ellipse at 30% 30%,
+    #ff6b8a,
+    #ff4b6e,
+    #d63060
+  );
+  border-radius: 50% 0 50% 50%;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════ */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #030014;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 75, 110, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 75, 110, 0.5);
 }
