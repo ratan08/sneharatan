@@ -207,13 +207,16 @@ export default function ProposalPage() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [noCount, setNoCount] = useState(0);
   const [isHoveringNo, setIsHoveringNo] = useState(false);
+  const [noBtnPos, setNoBtnPos] = useState({ x: 0, y: 0 });
   const [mounted, setMounted] = useState(false);
   const [letterLine, setLetterLine] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    setIsMobile("ontouchstart" in window || navigator.maxTouchPoints > 0);
   }, []);
 
   // Letter animation: reveal lines one-by-one
@@ -263,13 +266,26 @@ export default function ProposalPage() {
     }
   };
 
+  // On mobile: dodge the No button on tap so she can't easily press it
+  const dodgeNoButton = () => {
+    setNoBtnPos({
+      x: Math.random() * 160 - 80,
+      y: Math.random() * 120 - 60,
+    });
+  };
+
   const handleNo = () => {
+    // On mobile, dodge the button first (after question 3)
+    if (isMobile && currentQuestion >= 3) {
+      dodgeNoButton();
+    }
     if (noCount < pleadingMessages.length - 1) {
       setNoCount(noCount + 1);
     } else {
       if (currentQuestion < questions.length - 1) {
         setCurrentQuestion(currentQuestion + 1);
         setNoCount(0);
+        setNoBtnPos({ x: 0, y: 0 });
       }
     }
   };
@@ -636,29 +652,32 @@ export default function ProposalPage() {
               </motion.h2>
 
               {/* Buttons */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full relative">
                 <motion.button
                   onClick={handleYes}
                   className="btn-rose w-full sm:w-auto"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  animate={{ scale: 1 + noCount * 0.06 }}
+                  style={{ fontSize: `${1.15 + noCount * 0.05}rem` }}
                 >
                   Haan (Yes) ❤️
                 </motion.button>
 
                 <motion.button
                   onClick={handleNo}
-                  onMouseEnter={() => setIsHoveringNo(true)}
+                  onMouseEnter={() => {
+                    setIsHoveringNo(true);
+                    if (!isMobile && currentQuestion >= 3) dodgeNoButton();
+                  }}
                   onMouseLeave={() => setIsHoveringNo(false)}
-                  animate={
-                    isHoveringNo && currentQuestion >= 3
-                      ? {
-                          x: Math.random() * 80 - 40,
-                          y: Math.random() * 60 - 30,
-                        }
-                      : { x: 0, y: 0 }
-                  }
-                  className="px-8 py-4 rounded-full text-white/50 border border-white/10 hover:border-white/20 hover:text-white/70 transition-all cursor-pointer text-base w-full sm:w-auto bg-transparent"
+                  animate={{
+                    x: noBtnPos.x,
+                    y: noBtnPos.y,
+                    scale: Math.max(1 - noCount * 0.05, 0.6),
+                  }}
+                  transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                  className="px-8 py-4 rounded-full text-white/50 border border-white/10 hover:border-white/20 hover:text-white/70 transition-colors cursor-pointer text-base w-full sm:w-auto bg-transparent"
                 >
                   {currentNoMessage}
                 </motion.button>
@@ -749,20 +768,19 @@ export default function ProposalPage() {
 
                   <motion.button
                     onClick={handleNo}
-                    onMouseEnter={() => setIsHoveringNo(true)}
+                    onMouseEnter={() => {
+                      setIsHoveringNo(true);
+                      if (!isMobile) dodgeNoButton();
+                    }}
                     onMouseLeave={() => setIsHoveringNo(false)}
-                    animate={
-                      isHoveringNo
-                        ? {
-                            x: Math.random() * 120 - 60,
-                            y: Math.random() * 100 - 50,
-                            opacity: 1,
-                          }
-                        : { x: 0, y: 0, opacity: 1 }
-                    }
+                    animate={{
+                      x: noBtnPos.x,
+                      y: noBtnPos.y,
+                      opacity: 1,
+                    }}
                     className="px-6 py-3 text-white/40 hover:text-white/60 transition-colors cursor-pointer text-sm"
                     initial={{ opacity: 0 }}
-                    transition={{ delay: 1.5 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 15, delay: 1.5 }}
                   >
                     {noCount > 0 ? "You can't say no now 😉" : "No"}
                   </motion.button>

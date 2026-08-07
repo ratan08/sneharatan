@@ -430,3 +430,49 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 75, 110, 0.5);
 }
+
+/* ═══════════════════════════════════════════
+   MOBILE OPTIMIZATIONS
+   ═══════════════════════════════════════════ */
+
+/* Prevent text selection during interactions */
+button, .no-select {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Touch-friendly button sizes (min 44px) */
+@media (max-width: 640px) {
+  .btn-glow,
+  .btn-rose {
+    padding: 18px 32px;
+    font-size: 1rem;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Safe area padding for notch phones */
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Reduce petal animations for mobile perf */
+  .petal:nth-child(n + 16) {
+    display: none;
+  }
+}
+
+/* Prevent overscroll/bounce on iOS */
+html {
+  overscroll-behavior: none;
+}
+
+/* Smooth scrolling */
+html, body {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
