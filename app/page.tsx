@@ -2,28 +2,28 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, Sparkles, Stars, Music, VolumeX } from "lucide-react";
+import { Heart, Sparkles, Stars, Music, VolumeX, Download } from "lucide-react";
 import confetti from "canvas-confetti";
 
 /* ═══════════════════════════════════════════
    DATA
    ═══════════════════════════════════════════ */
 const questions = [
-  { id: 1, text: "Are you ready to travel the world and make unforgettable memories with me?", image: "/images/travel1.png" },
-  { id: 2, text: "Will you be my favorite travel partner for all our future adventures?", image: "/images/travel2.png" },
-  { id: 3, text: "Do you promise to always hold my hand, whether we're exploring a new city or lost in the mountains?", image: "/images/travel3.png" },
-  { id: 4, text: "Will you promise to share the responsibilities of our home and future together?", image: "/images/q1.png" },
-  { id: 5, text: "Will you stand by me through all of life's challenges and celebrate our successes together?", image: "/images/q2.png" },
-  { id: 6, text: "Will you promise to support me in our mutual growth and financial duties?", image: "/images/q3.png" },
-  { id: 7, text: "Will you promise to share in both my joys and my sorrows unconditionally?", image: "/images/q4.png" },
-  { id: 8, text: "Will you support me in caring for our family and raising our future with love?", image: "/images/q5.png" },
-  { id: 9, text: "Will you be my partner in health and sickness, sharing a life of joy and peace?", image: "/images/q6.png" },
-  { id: 10, text: "Will you be my best friend and soulmate for this life and beyond?", image: "/images/q7.png" },
-  { id: 11, text: "Can you imagine us sitting side by side in our old age, still holding hands just like today?", image: "/images/q8.png" },
-  { id: 12, text: "Why is it that I see your face in every beautiful moment of my life? Can you make it a reality forever?", image: "/images/q9.png" },
-  { id: 13, text: "Will you give me the honor of becoming the luckiest person in the whole world?", image: "/images/q10.png" },
-  { id: 14, text: "You've been my constant support through every joy and sorrow. Will you be my life partner for the rest of my days?", image: "/images/travel1.png" },
-  { id: 15, text: "The most perfect choice I have ever made in my life is loving you. Will you be mine forever?", image: "/images/travel2.png" },
+  { id: 1, text: "Every adventure is incomplete without you — will you wander the world with me, hand in hand, forever?", image: "/images/travel1.png" },
+  { id: 2, text: "Sunsets, mountains, and new horizons — will you be my forever travel partner and my home at the same time?", image: "/images/travel2.png" },
+  { id: 3, text: "Whether we're lost in a new city or found in each other's arms — will you promise to never let go of my hand?", image: "/images/travel3.png" },
+  { id: 4, text: "Will you build a home with me — not just of walls, but of laughter, warmth, and endless chai together?", image: "/images/q1.png" },
+  { id: 5, text: "Life will test us with storms and sunshine — will you dance with me through both, never once letting go?", image: "/images/q2.png" },
+  { id: 6, text: "Will you dream with me, grow with me, and turn every 'what if' into 'we did it together'?", image: "/images/q3.png" },
+  { id: 7, text: "In my happiest moments I want to see your smile, in my lowest I need your hand — will you be my everything?", image: "/images/q4.png" },
+  { id: 8, text: "Will you fill our future home with love, little feet running around, and the sound of your lullabies?", image: "/images/q5.png" },
+  { id: 9, text: "In sickness and in health, in midnight cravings and morning kisses — will you be mine through it all?", image: "/images/q6.png" },
+  { id: 10, text: "They say soulmates are rare — I found mine the day I found you. Will you be my best friend for eternity?", image: "/images/q7.png" },
+  { id: 11, text: "Picture us at 80, wrinkled and grey, still stealing glances — can you promise me that kind of forever?", image: "/images/q8.png" },
+  { id: 12, text: "Every beautiful thing reminds me of you — the moon, the rain, the stars. Will you make my world beautiful forever?", image: "/images/q9.png" },
+  { id: 13, text: "If saying 'yes' makes me the luckiest soul alive, will you give me that honor today and every day?", image: "/images/q10.png" },
+  { id: 14, text: "You've held me together when the world tried to pull me apart. Will you let me spend a lifetime repaying that love?", image: "/images/travel1.png" },
+  { id: 15, text: "Loving you wasn't a choice — it was destiny. Will you walk this beautiful destiny with me, forever and always?", image: "/images/travel2.png" },
 ];
 
 const pleadingMessages = [
@@ -196,6 +196,136 @@ function WeddingCountdown() {
     </div>
   );
 }
+// Downloadable Save the Date card
+function SaveTheDateCard() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [generated, setGenerated] = useState(false);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const w = 800;
+    const h = 1000;
+    canvas.width = w;
+    canvas.height = h;
+
+    // Background gradient
+    const bg = ctx.createLinearGradient(0, 0, w, h);
+    bg.addColorStop(0, "#0f0520");
+    bg.addColorStop(0.5, "#1a0a2e");
+    bg.addColorStop(1, "#0f0520");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+
+    // Decorative stars
+    for (let i = 0; i < 80; i++) {
+      const x = Math.random() * w;
+      const y = Math.random() * h;
+      const r = Math.random() * 2;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${Math.random() * 0.5 + 0.1})`;
+      ctx.fill();
+    }
+
+    // Top decorative line
+    const topGrad = ctx.createLinearGradient(100, 100, 700, 100);
+    topGrad.addColorStop(0, "transparent");
+    topGrad.addColorStop(0.5, "rgba(245,200,66,0.6)");
+    topGrad.addColorStop(1, "transparent");
+    ctx.strokeStyle = topGrad;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(100, 150);
+    ctx.lineTo(700, 150);
+    ctx.stroke();
+
+    // "Save the Date" text
+    ctx.textAlign = "center";
+    ctx.fillStyle = "rgba(245,200,66,0.8)";
+    ctx.font = "28px serif";
+    ctx.letterSpacing = "8px";
+    ctx.fillText("S A V E  T H E  D A T E", w / 2, 210);
+
+    // Heart symbol
+    ctx.fillStyle = "#ff4b6e";
+    ctx.font = "48px serif";
+    ctx.fillText("♥", w / 2, 300);
+
+    // Names
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "italic 64px 'Georgia', serif";
+    ctx.fillText("Ratan", w / 2, 400);
+
+    ctx.fillStyle = "rgba(245,200,66,0.9)";
+    ctx.font = "32px serif";
+    ctx.fillText("&", w / 2, 450);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "italic 64px 'Georgia', serif";
+    ctx.fillText("Sneha", w / 2, 520);
+
+    // Date
+    ctx.fillStyle = "#ff4b6e";
+    ctx.font = "bold 56px serif";
+    ctx.fillText("14 March 2027", w / 2, 650);
+
+    // Bottom decorative line
+    const botGrad = ctx.createLinearGradient(100, 720, 700, 720);
+    botGrad.addColorStop(0, "transparent");
+    botGrad.addColorStop(0.5, "rgba(245,200,66,0.6)");
+    botGrad.addColorStop(1, "transparent");
+    ctx.strokeStyle = botGrad;
+    ctx.beginPath();
+    ctx.moveTo(100, 720);
+    ctx.lineTo(700, 720);
+    ctx.stroke();
+
+    // Tagline
+    ctx.fillStyle = "rgba(255,255,255,0.5)";
+    ctx.font = "italic 24px 'Georgia', serif";
+    ctx.fillText("Forever and Always ❤️", w / 2, 800);
+
+    // Footer
+    ctx.fillStyle = "rgba(255,255,255,0.25)";
+    ctx.font = "16px sans-serif";
+    ctx.fillText("We would love for you to celebrate with us", w / 2, 900);
+
+    setGenerated(true);
+  }, []);
+
+  const downloadCard = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const link = document.createElement("a");
+    link.download = "Ratan-Sneha-Save-The-Date.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  };
+
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <canvas
+        ref={canvasRef}
+        className="rounded-2xl border border-white/10 max-w-[320px] sm:max-w-[400px] w-full"
+        style={{ aspectRatio: "4/5" }}
+      />
+      {generated && (
+        <button
+          onClick={downloadCard}
+          className="btn-rose flex items-center gap-2 text-base px-6 py-3"
+        >
+          <Download size={18} />
+          Download
+        </button>
+      )}
+    </div>
+  );
+}
 
 /* ═══════════════════════════════════════════
    MAIN PAGE
@@ -232,7 +362,7 @@ export default function ProposalPage() {
   const playMusic = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.volume = 0.4;
-      audioRef.current.play().catch(() => {});
+      audioRef.current.play().catch(() => { });
     }
   }, []);
 
@@ -291,11 +421,38 @@ export default function ProposalPage() {
   };
 
   const handleProposalYes = () => {
-    triggerConfetti();
+    triggerCelebration();
     setPhase("celebration");
   };
 
-  const triggerConfetti = () => {
+  // Fireworks bursts
+  const triggerFireworks = () => {
+    const duration = 5000;
+    const animationEnd = Date.now() + duration;
+    const interval = setInterval(() => {
+      if (Date.now() > animationEnd) return clearInterval(interval);
+      // Firework burst from bottom
+      confetti({
+        particleCount: 80,
+        startVelocity: 55,
+        spread: 70,
+        origin: { x: Math.random(), y: 1 },
+        colors: ["#ff4b6e", "#f5c842", "#ff6b8a", "#ffeaa7", "#a855f7", "#ec4899"],
+        ticks: 100,
+        gravity: 0.8,
+        scalar: 1.2,
+        drift: 0,
+        zIndex: 100,
+      });
+    }, 400);
+  };
+
+  // Combined celebration: confetti rain + fireworks
+  const triggerCelebration = () => {
+    // Immediate fireworks burst
+    triggerFireworks();
+
+    // Then sustained confetti
     const duration = 15 * 1000;
     const animationEnd = Date.now() + duration;
     const defaults = { startVelocity: 30, spread: 360, ticks: 80, zIndex: 100 };
@@ -557,17 +714,15 @@ export default function ProposalPage() {
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className={`${
-                      idx === 0
-                        ? "text-2xl sm:text-3xl text-glow"
-                        : idx === loveLetterLines.length - 1
+                    className={`${idx === 0
+                      ? "text-2xl sm:text-3xl text-glow"
+                      : idx === loveLetterLines.length - 1
                         ? "text-xl font-bold text-glow-gold pt-4"
                         : "text-lg sm:text-xl"
-                    } ${
-                      idx === loveLetterLines.length - 2
+                      } ${idx === loveLetterLines.length - 2
                         ? "italic"
                         : ""
-                    }`}
+                      }`}
                     style={{
                       fontFamily:
                         idx === 0
@@ -577,8 +732,8 @@ export default function ProposalPage() {
                         idx === 0
                           ? "#ff4b6e"
                           : idx === loveLetterLines.length - 1
-                          ? "#f5c842"
-                          : "rgba(255,255,255,0.85)",
+                            ? "#f5c842"
+                            : "rgba(255,255,255,0.85)",
                     }}
                   >
                     {line}
@@ -652,14 +807,14 @@ export default function ProposalPage() {
               </motion.h2>
 
               {/* Buttons */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full relative">
+              <div className="flex flex-col items-center justify-center gap-4 w-full relative min-h-[140px] overflow-visible">
                 <motion.button
                   onClick={handleYes}
-                  className="btn-rose w-full sm:w-auto"
+                  className="btn-rose w-full max-w-[280px] sm:max-w-none sm:w-auto"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  animate={{ scale: 1 + noCount * 0.06 }}
-                  style={{ fontSize: `${1.15 + noCount * 0.05}rem` }}
+                  animate={{ scale: 1 + noCount * 0.04 }}
+                  style={{ fontSize: `${1.1 + noCount * 0.03}rem` }}
                 >
                   Haan (Yes) ❤️
                 </motion.button>
@@ -677,7 +832,7 @@ export default function ProposalPage() {
                     scale: Math.max(1 - noCount * 0.05, 0.6),
                   }}
                   transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                  className="px-8 py-4 rounded-full text-white/50 border border-white/10 hover:border-white/20 hover:text-white/70 transition-colors cursor-pointer text-base w-full sm:w-auto bg-transparent"
+                  className="px-6 py-3 rounded-full text-white/50 border border-white/10 hover:border-white/20 hover:text-white/70 transition-colors cursor-pointer text-sm bg-transparent max-w-[240px] text-center"
                 >
                   {currentNoMessage}
                 </motion.button>
@@ -901,11 +1056,21 @@ export default function ProposalPage() {
                   <WeddingCountdown />
                 </motion.div>
 
+                {/* Save the Date Card - Download */}
+                <motion.div
+                  className="mb-10"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.8 }}
+                >
+                  <SaveTheDateCard />
+                </motion.div>
+
                 {/* Footer signature */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 2 }}
+                  transition={{ delay: 2.2 }}
                 >
                   <p
                     className="text-3xl sm:text-4xl text-glow"
