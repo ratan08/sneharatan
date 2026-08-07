@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart } from "lucide-react";
 import confetti from "canvas-confetti";
@@ -43,12 +43,19 @@ export default function ProposalPage() {
   const [proposalAccepted, setProposalAccepted] = useState(false);
   const [isHoveringNo, setIsHoveringNo] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const handleStart = () => setStarted(true);
+  const handleStart = () => {
+    setStarted(true);
+    if (audioRef.current) {
+      audioRef.current.volume = 0.5; // Optional: set a comfortable volume
+      audioRef.current.play().catch(err => console.log("Audio playback failed:", err));
+    }
+  };
 
   const handleYes = () => {
     if (currentQuestion < questions.length) {
@@ -98,24 +105,27 @@ export default function ProposalPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      {/* Background Audio */}
+      <audio ref={audioRef} src="/audio/backgroud.mp3" loop />
+      
       {/* Floating Hearts Background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute text-pink-500/30"
-            initial={{ 
-              y: "110vh", 
+            initial={{
+              y: "110vh",
               x: `${Math.random() * 100}vw`,
               scale: Math.random() * 0.5 + 0.5,
               rotate: 0
             }}
-            animate={{ 
+            animate={{
               y: "-10vh",
               x: `${Math.random() * 100}vw`,
               rotate: 360
             }}
-            transition={{ 
+            transition={{
               duration: Math.random() * 10 + 10,
               repeat: Infinity,
               ease: "linear",
@@ -129,7 +139,7 @@ export default function ProposalPage() {
 
       <AnimatePresence mode="wait">
         {!started && (
-          <motion.div 
+          <motion.div
             key="start"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -142,7 +152,7 @@ export default function ProposalPage() {
             <p className="text-xl text-white/90 mb-8 italic">
               "तुम्हारी मुस्कान से ही शुरू होती है मेरी हर सुबह..."
             </p>
-            <button 
+            <button
               onClick={handleStart}
               className="floating bg-white text-pink-600 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-pink-50 hover:shadow-xl transition-all duration-300 text-lg cursor-pointer"
             >
@@ -152,7 +162,7 @@ export default function ProposalPage() {
         )}
 
         {started && !proposalAccepted && currentQuestion < questions.length && (
-          <motion.div 
+          <motion.div
             key="question"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -160,13 +170,11 @@ export default function ProposalPage() {
             transition={{ type: "spring", bounce: 0.4 }}
             className="glass-card p-6 md:p-10 rounded-3xl max-w-2xl w-full text-center relative z-10 shadow-2xl flex flex-col items-center"
           >
-            <div className="text-sm font-semibold text-white/80 mb-2 uppercase tracking-widest">
-              Question {currentQuestion + 1} of {questions.length}
-            </div>
-            
+
+
             <div className="mb-6 w-64 h-64 md:w-80 md:h-80 rounded-2xl overflow-hidden shadow-lg border-4 border-white/30 bg-black/10">
-              <img 
-                src={questions[currentQuestion].image} 
+              <img
+                src={questions[currentQuestion].image}
                 alt="Romantic Illustration"
                 className="w-full h-full object-cover"
               />
@@ -175,15 +183,15 @@ export default function ProposalPage() {
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-8 leading-tight min-h-[80px] flex items-center justify-center">
               {questions[currentQuestion].text}
             </h2>
-            
+
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full">
-              <button 
+              <button
                 onClick={handleYes}
                 className="bg-white text-pink-600 font-bold py-4 px-10 rounded-full shadow-lg hover:shadow-pink-500/50 hover:scale-105 active:scale-95 transition-all duration-300 text-xl w-full sm:w-auto border-2 border-transparent hover:border-pink-200 cursor-pointer"
               >
                 Haan (Yes) ❤️
               </button>
-              <motion.button 
+              <motion.button
                 onClick={handleNo}
                 onMouseEnter={() => setIsHoveringNo(true)}
                 onMouseLeave={() => setIsHoveringNo(false)}
@@ -200,48 +208,61 @@ export default function ProposalPage() {
         )}
 
         {started && !proposalAccepted && currentQuestion === questions.length && (
-          <motion.div 
+          <motion.div
             key="proposal"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="glass-card p-10 rounded-3xl max-w-2xl w-full text-center relative z-10 shadow-2xl border-4 border-white/50"
+            className="glass-card p-10 rounded-3xl max-w-2xl w-full text-center relative z-10 shadow-2xl border-4 border-white/50 overflow-hidden"
           >
-            <div className="flex justify-center mb-6">
-              <Heart className="text-red-500 floating" size={80} fill="currentColor" />
-            </div>
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-8 drop-shadow-lg">
-              I love you, Sneha.
-            </h1>
-            <h2 className="text-4xl text-white font-medium mb-12">
-              Will you marry me? 💍
-            </h2>
+            {/* Background Image for Final Proposal */}
+            <div 
+              className="absolute inset-0 z-0 opacity-40 bg-black"
+              style={{
+                backgroundImage: 'url(/images/image.jpeg)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundBlendMode: 'overlay'
+              }}
+            />
             
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <button 
-                onClick={handleYes}
-                className="bg-white text-red-500 font-bold py-5 px-12 rounded-full shadow-[0_0_40px_rgba(255,255,255,0.6)] hover:scale-110 active:scale-95 transition-all duration-300 text-2xl w-full sm:w-auto cursor-pointer"
-              >
-                YES! A thousand times YES!
-              </button>
-              
-              <motion.button 
-                onClick={handleNo}
-                onMouseEnter={() => setIsHoveringNo(true)}
-                onMouseLeave={() => setIsHoveringNo(false)}
-                animate={isHoveringNo ? {
-                  x: Math.random() * 100 - 50,
-                  y: Math.random() * 100 - 50,
-                } : { x: 0, y: 0 }}
-                className="bg-transparent text-white/70 font-semibold py-3 px-6 rounded-full hover:bg-white/10 transition-colors text-lg cursor-pointer"
-              >
-                {noCount > 0 ? "You can't say no now 😉" : "No"}
-              </motion.button>
+            <div className="relative z-10">
+              <div className="flex justify-center mb-6">
+                <Heart className="text-red-500 floating" size={80} fill="currentColor" />
+              </div>
+              <h1 className="text-5xl md:text-6xl font-bold text-white mb-8 drop-shadow-lg">
+                I love you, Sneha.
+              </h1>
+              <h2 className="text-4xl text-white font-medium mb-12 drop-shadow-lg">
+                Will you marry me? 💍
+              </h2>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                <button
+                  onClick={handleYes}
+                  className="bg-white text-red-500 font-bold py-5 px-12 rounded-full shadow-[0_0_40px_rgba(255,255,255,0.6)] hover:scale-110 active:scale-95 transition-all duration-300 text-2xl w-full sm:w-auto cursor-pointer"
+                >
+                  YES! A thousand times YES!
+                </button>
+
+                <motion.button
+                  onClick={handleNo}
+                  onMouseEnter={() => setIsHoveringNo(true)}
+                  onMouseLeave={() => setIsHoveringNo(false)}
+                  animate={isHoveringNo ? {
+                    x: Math.random() * 100 - 50,
+                    y: Math.random() * 100 - 50,
+                  } : { x: 0, y: 0 }}
+                  className="bg-transparent text-white/90 font-semibold py-3 px-6 rounded-full hover:bg-white/20 transition-colors text-lg cursor-pointer"
+                >
+                  {noCount > 0 ? "You can't say no now 😉" : "No"}
+                </motion.button>
+              </div>
             </div>
           </motion.div>
         )}
 
         {proposalAccepted && (
-          <motion.div 
+          <motion.div
             key="success"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -256,11 +277,11 @@ export default function ProposalPage() {
                 मंगलम् पुण्डरीकाक्षः मंगलाय तनो हरिः॥
               </p>
             </div>
-            
+
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
               She said YES! 🎉
             </h1>
-            
+
             <div className="bg-white/20 rounded-2xl p-6 mb-8 backdrop-blur-md border border-white/30 inline-block">
               <p className="text-3xl text-white font-semibold">
                 We will get married on
@@ -269,7 +290,7 @@ export default function ProposalPage() {
                 14 March 2027
               </p>
             </div>
-            
+
             <p className="text-2xl text-white/90 italic font-medium">
               "Forever and Always, Ratan & Sneha" ❤️
             </p>
