@@ -6,16 +6,21 @@ import { Heart } from "lucide-react";
 import confetti from "canvas-confetti";
 
 const questions = [
-  { id: 1, text: "Din me 10 min he sahi lekin call pr baat hoge humare?" },
-  { id: 2, text: "Aur tumhe mujhe holiday chahiye?" },
-  { id: 3, text: "Kal se sirf text karogi ya call bhi?" },
-  { id: 4, text: "Will you promise to share the responsibilities of our home and future together?" },
-  { id: 5, text: "Will you stand by me through all of life's challenges and celebrate our successes together?" },
-  { id: 6, text: "Will you promise to support me in our mutual growth and financial duties?" },
-  { id: 7, text: "Will you promise to share in both my joys and my sorrows unconditionally?" },
-  { id: 8, text: "Will you support me in caring for our family and raising our future with love?" },
-  { id: 9, text: "Will you be my partner in health and sickness, sharing a life of joy and peace?" },
-  { id: 10, text: "Will you be my best friend and soulmate for this life and beyond?" },
+  { id: 1, text: "Are you ready to travel the world and make unforgettable memories with me?", image: "/images/travel1.png" },
+  { id: 2, text: "Will you be my favorite travel partner for all our future adventures?", image: "/images/travel2.png" },
+  { id: 3, text: "Do you promise to always hold my hand, whether we're exploring a new city or lost in the mountains?", image: "/images/travel3.png" },
+  { id: 4, text: "Will you promise to share the responsibilities of our home and future together?", image: "/images/q1.png" },
+  { id: 5, text: "Will you stand by me through all of life's challenges and celebrate our successes together?", image: "/images/q2.png" },
+  { id: 6, text: "Will you promise to support me in our mutual growth and financial duties?", image: "/images/q3.png" },
+  { id: 7, text: "Will you promise to share in both my joys and my sorrows unconditionally?", image: "/images/q4.png" },
+  { id: 8, text: "Will you support me in caring for our family and raising our future with love?", image: "/images/q5.png" },
+  { id: 9, text: "Will you be my partner in health and sickness, sharing a life of joy and peace?", image: "/images/q6.png" },
+  { id: 10, text: "Will you be my best friend and soulmate for this life and beyond?", image: "/images/q7.png" },
+  { id: 11, text: "क्या तुम कल्पना कर सकती हो कि हम बुढ़ापे में भी एक साथ ऐसे ही बैठे हों, हाथ में हाथ डाले?", image: "/images/q8.png" },
+  { id: 12, text: "मेरे जीवन के हर खूबसूरत पल में तुम्हारा चेहरा ही क्यों सामने आता है? क्या तुम इसे हमेशा के लिए हकीकत बना सकती हो?", image: "/images/q9.png" },
+  { id: 13, text: "क्या तुम मुझे दुनिया का सबसे खुशनसीब इंसान बनने का मौका दोगी?", image: "/images/q10.png" },
+  { id: 14, text: "मेरी हर खुशी, हर गम में तुम मेरा साथ देती आई हो। क्या तुम पूरी जिंदगी के लिए मेरी जीवनसंगिनी बनोगी?", image: "/images/travel1.png" },
+  { id: 15, text: "मैंने अपनी पूरी जिंदगी में सिर्फ एक ही चीज़ सबसे सही चुनी है, और वह है तुमसे प्यार करना। क्या तुम अब हमेशा के लिए मेरी हो जाओगी?", image: "/images/travel2.png" }
 ];
 
 const pleadingMessages = [
@@ -153,16 +158,25 @@ export default function ProposalPage() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ type: "spring", bounce: 0.4 }}
-            className="glass-card p-8 md:p-12 rounded-3xl max-w-2xl w-full text-center relative z-10 shadow-2xl"
+            className="glass-card p-6 md:p-10 rounded-3xl max-w-2xl w-full text-center relative z-10 shadow-2xl flex flex-col items-center"
           >
-            <div className="text-sm font-semibold text-white/80 mb-4 uppercase tracking-widest">
-              Promise {currentQuestion + 1} of {questions.length}
+            <div className="text-sm font-semibold text-white/80 mb-2 uppercase tracking-widest">
+              Question {currentQuestion + 1} of {questions.length}
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-10 leading-tight">
+            
+            <div className="mb-6 w-64 h-64 md:w-80 md:h-80 rounded-2xl overflow-hidden shadow-lg border-4 border-white/30 bg-black/10">
+              <img 
+                src={questions[currentQuestion].image} 
+                alt="Romantic Illustration"
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-8 leading-tight min-h-[80px] flex items-center justify-center">
               {questions[currentQuestion].text}
             </h2>
             
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full">
               <button 
                 onClick={handleYes}
                 className="bg-white text-pink-600 font-bold py-4 px-10 rounded-full shadow-lg hover:shadow-pink-500/50 hover:scale-105 active:scale-95 transition-all duration-300 text-xl w-full sm:w-auto border-2 border-transparent hover:border-pink-200 cursor-pointer"
@@ -174,8 +188,8 @@ export default function ProposalPage() {
                 onMouseEnter={() => setIsHoveringNo(true)}
                 onMouseLeave={() => setIsHoveringNo(false)}
                 animate={isHoveringNo && currentQuestion >= 3 ? {
-                  x: Math.random() * 40 - 20,
-                  y: Math.random() * 40 - 20,
+                  x: Math.random() * 60 - 30,
+                  y: Math.random() * 60 - 30,
                 } : { x: 0, y: 0 }}
                 className="bg-pink-600/30 text-white font-bold py-4 px-8 rounded-full shadow-lg backdrop-blur-sm border border-white/30 hover:bg-pink-600/50 transition-colors duration-300 text-lg w-full sm:w-auto cursor-pointer"
               >
