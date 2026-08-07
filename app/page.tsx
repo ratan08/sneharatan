@@ -16,11 +16,11 @@ const questions = [
   { id: 8, text: "Will you support me in caring for our family and raising our future with love?", image: "/images/q5.png" },
   { id: 9, text: "Will you be my partner in health and sickness, sharing a life of joy and peace?", image: "/images/q6.png" },
   { id: 10, text: "Will you be my best friend and soulmate for this life and beyond?", image: "/images/q7.png" },
-  { id: 11, text: "क्या तुम कल्पना कर सकती हो कि हम बुढ़ापे में भी एक साथ ऐसे ही बैठे हों, हाथ में हाथ डाले?", image: "/images/q8.png" },
-  { id: 12, text: "मेरे जीवन के हर खूबसूरत पल में तुम्हारा चेहरा ही क्यों सामने आता है? क्या तुम इसे हमेशा के लिए हकीकत बना सकती हो?", image: "/images/q9.png" },
-  { id: 13, text: "क्या तुम मुझे दुनिया का सबसे खुशनसीब इंसान बनने का मौका दोगी?", image: "/images/q10.png" },
-  { id: 14, text: "मेरी हर खुशी, हर गम में तुम मेरा साथ देती आई हो। क्या तुम पूरी जिंदगी के लिए मेरी जीवनसंगिनी बनोगी?", image: "/images/travel1.png" },
-  { id: 15, text: "मैंने अपनी पूरी जिंदगी में सिर्फ एक ही चीज़ सबसे सही चुनी है, और वह है तुमसे प्यार करना। क्या तुम अब हमेशा के लिए मेरी हो जाओगी?", image: "/images/travel2.png" }
+  { id: 11, text: "Can you imagine us sitting side by side in our old age, still holding hands just like today?", image: "/images/q8.png" },
+  { id: 12, text: "Why is it that I see your face in every beautiful moment of my life? Can you make it a reality forever?", image: "/images/q9.png" },
+  { id: 13, text: "Will you give me the honor of becoming the luckiest person in the whole world?", image: "/images/q10.png" },
+  { id: 14, text: "You've been my constant support through every joy and sorrow. Will you be my life partner for the rest of my days?", image: "/images/travel1.png" },
+  { id: 15, text: "The most perfect choice I have ever made in my life is loving you. Will you be mine forever?", image: "/images/travel2.png" }
 ];
 
 const pleadingMessages = [
